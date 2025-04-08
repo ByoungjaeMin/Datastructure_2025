@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "새 프로필",
+    "Projects": [
+      {
+        "Path": "5thWeek\\5thWeek.vcxproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ch05_2\\ch05_2.vcxproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
