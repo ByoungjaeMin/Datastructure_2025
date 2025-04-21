@@ -1,0 +1,6 @@
+﻿  queueS.c
+C:\Users\chomg\OneDrive\바탕 화면\ch06\ch06_1\queueS.c(43,23): warning C4033: 'deQueue'은(는) 값을 반환해야 합니다.
+C:\Users\chomg\OneDrive\바탕 화면\ch06\ch06_1\queueS.c(52,23): warning C4033: 'peekQ'은(는) 값을 반환해야 합니다.
+C:\Users\chomg\OneDrive\바탕 화면\ch06\ch06_1\queueS.c(48,1): warning C4715: 'deQueue': 모든 제어 경로에서 값을 반환하지는 않습니다.
+C:\Users\chomg\OneDrive\바탕 화면\ch06\ch06_1\queueS.c(54,1): warning C4715: 'peekQ': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  ch06_1.vcxproj -> C:\Users\chomg\OneDrive\바탕 화면\ch06\x64\Debug\ch06_1.exe
