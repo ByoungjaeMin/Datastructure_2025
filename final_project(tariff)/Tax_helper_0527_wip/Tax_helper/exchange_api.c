@@ -5,7 +5,7 @@
 #include <curl/curl.h>
 #include "exchange_api.h"
 
-#define API_KEY "s220a245c035i225y080w060e0"
+#define API_KEY "API"
 #define API_URL "https://unipass.customs.go.kr:38010/ext/rest/trtyCmmnRtsQry/retrieveTrtyCmmnRts"
 
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -27,7 +27,7 @@ double get_usd_to_krw_rate() {
         curl_easy_cleanup(curl);
     }
 
-    // ÀÀ´ä ¿¹½Ã: <cmmnCd>USD</cmmnCd>...<krwCnvtRts>1350.30</krwCnvtRts>
+    // Ã€Ã€Â´Ã¤ Â¿Â¹Â½Ãƒ: <cmmnCd>USD</cmmnCd>...<krwCnvtRts>1350.30</krwCnvtRts>
     char* pos = strstr(buffer, "<cmmnCd>USD</cmmnCd>");
     if (pos) {
         char* rate_start = strstr(pos, "<krwCnvtRts>");
