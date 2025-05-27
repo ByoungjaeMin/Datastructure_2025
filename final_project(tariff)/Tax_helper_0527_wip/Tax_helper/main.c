@@ -42,10 +42,10 @@ int main() {
             break;
         case 51:
             // TODO: 상품 가격/수량 입력 후 세금 계산
-            Item* item=0;
+            Item* item;
             char name[50];
             //구동확인용 예시, 나중에 item_list 완성시 연동
-            int quantity=0;
+            int quantity;
 			Item item_list[][50] = {
 				{"전자제품", 10000},
 				{"의류", 6000},
