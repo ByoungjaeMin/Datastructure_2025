@@ -1,0 +1,12 @@
+﻿  main.c
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(2,9): warning C4005: 'CURL_STATICLIB': 매크로 재정의
+      C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(2,9):
+      이전에 명령줄에서 선언된 'CURL_STATICLIB'
+  
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(30,23): warning C4047: '==': 'int'의 간접 참조 수준이 'char [2]'과(와) 다릅니다.
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(64,27): warning C4047: '==': 'int'의 간접 참조 수준이 'char [2]'과(와) 다릅니다.
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(68,25): warning C4133: '함수': 'Item [50]'과(와) 'const char *' 사이의 형식이 호환되지 않습니다.
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(69,11): warning C4047: '=': 'Item *'의 간접 참조 수준이 'Item (*)[50]'과(와) 다릅니다.
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(71,53): warning C4047: '함수': 'const char *'의 간접 참조 수준이 'int'과(와) 다릅니다.
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\Tax_helper\main.c(71,53): warning C4024: 'calculate_tax': 형식 및 실제 매개 변수 2의 형식이 서로 다릅니다.
+  Tax_helper.vcxproj -> C:\Users\chomg\OneDrive\바탕 화면\Tax_helper_0526_wip\x64\Debug\Tax_helper.exe
