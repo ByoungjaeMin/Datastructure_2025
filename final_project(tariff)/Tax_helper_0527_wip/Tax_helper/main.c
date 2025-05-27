@@ -43,7 +43,7 @@ int main() {
         case 51:
             // TODO: 상품 가격/수량 입력 후 세금 계산
             Item* item=0;
-            char name[32];
+            char name[50];
             //구동확인용 예시, 나중에 item_list 완성시 연동
             int quantity=0;
 			Item item_list[][50] = {
