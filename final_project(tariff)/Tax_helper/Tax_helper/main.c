@@ -29,31 +29,35 @@ int main() {
     // 1) 트리를 CSV로부터 빌드 (기존 대로)
     TreeNode* tariff_tree_root = build_tree_from_csv("tariff.csv");
     if (!tariff_tree_root) {
-        printf("트리 생성 실패\n");
+        printf("오류: 트리 생성 실패. 'tariff.csv' 파일이 올바른 위치에 있는지 확인하세요.\n");
         return 1;
     }
 
     // 2) tax_items.csv를 한 번만 로드합니다.
     //    프로젝트 구조에 따라 경로를 조정하세요.
     loadTaxItems("tax_items.csv");
-    // tax_calc 모듈 내부에서 로드 실패 시 stderr 출력하도록 되어 있습니다.
+    loadTaxItemsOpt("tax_items.csv");
 
     char choice;
     do {
         show_menu();
-        scanf("%c", &choice);
-        if (getchar() == '\n') {
-            fflush(stdin);
+        if (scanf(" %c", &choice) != 1) {
+            printf("잘못된 입력입니다. 다시 시도하세요.\n");
+            while (getchar() != '\n');
+            continue;
         }
+        while (getchar() != '\n');
 
         switch (choice) {
         case '1': {
-            // 기존에 구현된 트리 기반 카테고리 조회 로직 그대로 유지
             char item_name[128];
             print_tree(tariff_tree_root, 0);
             printf("조회할 품목명을 입력하세요 (예: 의류/수영복/속옷): ");
-            scanf("%s", item_name);
-            if (getchar() == '\n') fflush(stdin);
+            if (fgets(item_name, sizeof(item_name), stdin) == NULL) {
+                printf("입력 오류\n");
+                break;
+            }
+            item_name[strcspn(item_name, "\r\n")] = '\0';
 
             TreeNode* found = search_tree(tariff_tree_root, item_name);
             if (found) {
@@ -65,32 +69,63 @@ int main() {
             break;
         }
         case '2':
-            // TODO: 국가별 면세 한도 정보 출력
             show_country_duty_free_info();
             break;
 
         case '3':
-            // 3번 메뉴—별도의 모듈(tax_calc.c/h)에서 처리
             handleTaxCalculation();
             break;
 
         case '4': {
-            // 예시: 최적화 알고리즘 실행
-            printf("[4] 최적 관부가세 및 박스 묶음 계산 실행\n");
+            printf("[4] 관부가세/배송비 최적화 계산기\n");
 
-            // (예시용 환율 조회 — 실제 구현 시 캐시 적용 가능)
             double rate = get_usd_to_krw_rate();
             printf("현재 환율: USD 1 = %.2f KRW\n", rate);
 
-            // 관세율 API는 각 아이템에 개별 적용
-            // 예: item_list[i].duty_rate = atof(get_tariff_rate_from_api(item_list[i].hs_code));
+            char optChoice_char;
+            do {
+                printf("\n--- 최적화 계산기 메뉴 ---\n");
+                printf("1. 상품 등록\n");
+                printf("2. 관세 최적화 계산 및 박스 묶음 보기\n");
+                printf("3. 초기화 (등록된 상품 제거)\n");
+                printf("4. 이전 메뉴로 돌아가기\n");
+                printf("선택: ");
+                if (scanf(" %c", &optChoice_char) != 1) {
+                    printf("잘못된 입력입니다. 숫자를 입력해주세요.\n");
+                    while (getchar() != '\n');
+                    continue;
+                }
+                while (getchar() != '\n');
 
-            reset_optimizer();
-            build_duty_free_boxes();
-            build_duty_boxes();
-            print_boxes();
+                switch (optChoice_char) {
+                case '1':
+                    handleTaxCalculation_Optmize();
+                    break;
+                case '2':
+                    if (item_count == 0) {
+                        printf("최적화할 상품이 없습니다. 상품을 먼저 등록해주세요.\\n");
+                    }
+                    else {
+                        build_duty_free_boxes();
+                        build_duty_boxes();
+                        print_boxes();
+                    }
+                    break;
+                case '3':
+                    reset_optimizer();
+                    printf("최적화 계산기 상품 목록이 초기화되었습니다.\\n");
+                    break;
+                case '4':
+                    printf("이전 메뉴로 돌아갑니다.\n");
+                    break;
+                default:
+                    printf("잘못된 선택입니다.\n");
+                    break;
+                }
+            } while (optChoice_char != '4');
             break;
         }
+
         case '5':
             printf("프로그램을 종료합니다.\n");
             break;
