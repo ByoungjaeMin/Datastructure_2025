@@ -1,6 +1,9 @@
-﻿  tax_calc.c
-libcurld.lib(progress.obj) : warning LNK4099: 'libcurld.pdb' PDB를 'libcurld.lib(progress.obj)' 또는 'C:\Users\minbj\source\repos\Tax_helper_0527_wip\x64\Debug\libcurld.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-libcurld.lib(timediff.obj) : warning LNK4099: 'libcurld.pdb' PDB를 'libcurld.lib(timediff.obj)' 또는 'C:\Users\minbj\source\repos\Tax_helper_0527_wip\x64\Debug\libcurld.pdb'에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
-  Tax_helper.vcxproj -> C:\Users\minbj\source\repos\Tax_helper_0527_wip\x64\Debug\Tax_helper.exe
-  'pwsh.exe'은(는) 내부 또는 외부 명령, 실행할 수 있는 프로그램, 또는
-  배치 파일이 아닙니다.
+﻿  main.c
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\main.c(2,9): warning C4005: 'CURL_STATICLIB': 매크로 재정의
+      C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\main.c(2,9):
+      이전에 명령줄에서 선언된 'CURL_STATICLIB'
+  
+  tax_optimizer.c
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\tax_optimizer.c(246,16): warning C4566: 유니버설 문자 이름 '\U0001F4E6'(으)로 표현되는 문자는 현재 코드 페이지(949)에서 표현할 수 없습니다.
+  코드를 생성하고 있습니다...
+  Tax_helper.vcxproj -> C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\x64\Debug\Tax_helper.exe

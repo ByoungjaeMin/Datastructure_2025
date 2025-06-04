@@ -22,7 +22,7 @@ static int catItemCount[MAX_CATEGORY];
 static double parsePercent(const char* percentStr) {
     char buf[MAX_NAME_LEN];
     int i, j = 0;
-    for (i = 0; percentStr[i] != '\0' && j < (int)sizeof(buf) - 1; ++i) {
+    for (i = 0; percentStr[i] != '\0' && j < MAX_NAME_LEN - 1; ++i) {
         if (percentStr[i] == '%') continue;
         if (percentStr[i] == '/') break;
         if (percentStr[i] == ' ') continue;
@@ -47,7 +47,6 @@ void loadTaxItems(const char* csvPath) {
         catItemCount[i] = 0;
     }
 
-    // 첫 줄(헤더) 건너뛰기
     if (fgets(line, sizeof(line), fp) == NULL) {
         fclose(fp);
         return;
@@ -87,7 +86,9 @@ void loadTaxItems(const char* csvPath) {
         double specialRate = parsePercent(specialStr);
 
         strncpy(taxList[taxCount].taxType, taxType, MAX_NAME_LEN - 1);
+        taxList[taxCount].taxType[MAX_NAME_LEN - 1] = '\0';
         strncpy(taxList[taxCount].itemName, itemName, MAX_NAME_LEN - 1);
+        taxList[taxCount].itemName[MAX_NAME_LEN - 1] = '\0';
         taxList[taxCount].tariffRate = tariffRate;
         taxList[taxCount].vatRate = vatRate;
         taxList[taxCount].specialRate = specialRate;
@@ -102,6 +103,7 @@ void loadTaxItems(const char* csvPath) {
         if (catIdx < 0 && categoryCount < MAX_CATEGORY) {
             catIdx = categoryCount;
             strncpy(categoryNames[catIdx], taxType, MAX_NAME_LEN - 1);
+            categoryNames[catIdx][MAX_NAME_LEN - 1] = '\0';
             categoryCount++;
         }
 
@@ -116,9 +118,8 @@ void loadTaxItems(const char* csvPath) {
     fclose(fp);
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 카테고리 목록만 보기
-static void printCategoryList() {
+
+void printCategoryList() {
     printf("\n====== 카테고리 목록 ======\n");
     for (int i = 0; i < categoryCount; i++) {
         printf("[%d] %s\n", i + 1, categoryNames[i]);
@@ -126,8 +127,8 @@ static void printCategoryList() {
     printf("==========================\n\n");
 }
 
-// 선택한 카테고리의 하위 품목만 보기
-static void printItemsInCategory(int catNo) {
+
+void printItemsInCategory(int catNo) {
     if (catNo < 1 || catNo > categoryCount) return;
     int idx = catNo - 1;
     printf("\n-- [%s] 카테고리의 품목들 --\n", categoryNames[idx]);
@@ -138,9 +139,7 @@ static void printItemsInCategory(int catNo) {
     printf("------------------------\n\n");
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// itemName으로 taxList 인덱스를 찾아 주는 함수
-static int findTaxIndexByName(const char* itemName) {
+int findTaxIndexByName(const char* itemName) {
     for (int i = 0; i < taxCount; i++) {
         if (strcmp(taxList[i].itemName, itemName) == 0) {
             return i;
@@ -149,8 +148,15 @@ static int findTaxIndexByName(const char* itemName) {
     return -1;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 메뉴 3번: 세금 계산
+double calculate_tax_for_item(double price, double tariff_rate, double vat_rate, double special_rate) {
+    double tariff_amount = price * (tariff_rate / 100.0);
+    // 부가세는 물품 가격 + 관세에 부과됩니다.
+    double vat_amount = (price + tariff_amount) * (vat_rate / 100.0);
+    double special_amount = price * (special_rate / 100.0); // 특소세는 품목에 따라 다를 수 있습니다.
+
+    return tariff_amount + vat_amount + special_amount;
+}
+
 void handleTaxCalculation(void) {
     if (taxCount == 0) {
         printf("세금 데이터가 로드되지 않았습니다.\n");
@@ -170,7 +176,6 @@ void handleTaxCalculation(void) {
     char product[MAX_NAME_LEN] = { 0 };
 
     if (mode == 2) {
-        // 1) 카테고리 목록만 출력
         printCategoryList();
         int catNo;
         printf("카테고리 번호를 입력하세요: ");
@@ -181,7 +186,6 @@ void handleTaxCalculation(void) {
         }
         while (getchar() != '\n');
 
-        // 2) 선택된 카테고리의 품목만 출력
         printItemsInCategory(catNo);
         int itemNo;
         printf("품목 번호를 입력하세요: ");
