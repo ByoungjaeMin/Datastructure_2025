@@ -15,40 +15,52 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="tree.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="tax_optimizer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="tax_api.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="tax.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="exchange_api.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="tree_from_csv.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="tax_calc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="tax.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="tax_api.c">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="exchange_api.c">
+    <ClCompile Include="tax_optimizer.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="tree.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="tax_optimizer.c">
+    <ClCompile Include="exchange_api.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="exchange_api.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="tax.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="tax_api.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="tax_optimizer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="tree.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
+    <ClCompile Include="tax_api.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="tree_from_csv.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="tax_calc.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

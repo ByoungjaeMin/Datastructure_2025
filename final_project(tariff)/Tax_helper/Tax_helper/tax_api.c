@@ -5,7 +5,7 @@
 #include <curl/curl.h>
 #include "tax_api.h"
 
-#define API_KEY "여기에_발급받은_API_KEY_입력"
+#define API_KEY ""  // ← 여기에 본인의 API Key 입력
 #define API_URL "https://unipass.customs.go.kr:38010/ext/rest/hscdTariffInfoQry/retrieveHscdTariffInfo"
 
 struct MemoryStruct {
@@ -43,6 +43,7 @@ char* parse_tariff_rate(const char* xml) {
     return rate;
 }
 
+// 내부 API 호출 및 결과 반환
 char* get_tariff_rate_from_api(const char* hs_code) {
     CURL* curl;
     CURLcode res;
@@ -63,9 +64,30 @@ char* get_tariff_rate_from_api(const char* hs_code) {
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
         res = curl_easy_perform(curl);
+        if (res != CURLE_OK) {
+            fprintf(stderr, "[ERROR] curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        }
+        else {
+            printf("\n[DEBUG] API 응답 원문 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓\n");
+            printf("%s\n", chunk.memory);
+            printf("[DEBUG] ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑\n");
+        }
+
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
 
     return parse_tariff_rate(chunk.memory);
+}
+
+
+// 외부에 제공되는 출력 함수
+void fetch_tariff_from_api(const char* hs_code) {
+    char* duty = get_tariff_rate_from_api(hs_code);
+    if (strlen(duty) > 0) {
+        printf("HS코드 %s 의 관세율은 %s%% 입니다.\n", hs_code, duty);
+    }
+    else {
+        printf("관세율 정보를 불러오는 데 실패했습니다. HS코드를 다시 확인하세요.\n");
+    }
 }

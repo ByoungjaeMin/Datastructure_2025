@@ -1,6 +1,4 @@
-﻿// tax_optimizer.c - 관부가세 최적화 알고리즘
-
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>

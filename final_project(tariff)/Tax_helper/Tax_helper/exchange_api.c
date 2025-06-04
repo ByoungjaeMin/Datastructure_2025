@@ -5,7 +5,7 @@
 #include <curl/curl.h>
 #include "exchange_api.h"
 
-#define API_KEY "여기에_발급받은_API_KEY_입력"
+#define API_KEY ""
 #define API_URL "https://unipass.customs.go.kr:38010/ext/rest/trtyCmmnRtsQry/retrieveTrtyCmmnRts"
 
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, void* userp) {

@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #ifndef TAX_API_H
 #define TAX_API_H
 
-// °ü¼¼Ã» UNIPASS °ü¼¼À² Á¶È¸ API
+// Â°Ã¼Â¼Â¼ÃƒÂ» UNIPASS Â°Ã¼Â¼Â¼Ã€Â² ÃÂ¶ÃˆÂ¸ API
 char* get_tariff_rate_from_api(const char* hs_code);
-
+void fetch_tariff_from_api(const char* hs_code);
 #endif
