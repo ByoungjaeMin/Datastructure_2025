@@ -1,3 +1,5 @@
+// tax_calc.h
+
 #ifndef TAX_CALC_H
 #define TAX_CALC_H
 
@@ -18,11 +20,5 @@ void loadTaxItems(const char* csvPath);
 // 메뉴 3번 “세금 계산”을 처리하는 함수
 void handleTaxCalculation(void);
 
-void printCategoryList();
-void printItemsInCategory(int catNo);
-int findTaxIndexByName(const char* itemName);
+#endif // TAX_CALC_H
 
-// 새롭게 추가: 품목에 대한 세금을 계산하는 함수
-double calculate_tax_for_item(double price, double tariff_rate, double vat_rate, double special_rate);
-
-#endif
