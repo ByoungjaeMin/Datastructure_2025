@@ -107,6 +107,7 @@ int main() {
                         printf("최적화할 상품이 없습니다. 상품을 먼저 등록해주세요.\\n");
                     }
                     else {
+                        selectcur();
                         build_duty_free_boxes();
                         build_duty_boxes();
                         print_boxes();

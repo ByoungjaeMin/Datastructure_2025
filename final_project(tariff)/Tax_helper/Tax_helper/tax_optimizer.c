@@ -26,8 +26,10 @@ Item item_list[MAX_ITEMS];
 int item_count = 0;
 Box boxes[MAX_BOXES];
 int box_count = 0;
-
-char cnty[4] = { 0 };
+int limit;
+char cur[4];
+int cnty;
+double rate;
 
 static double parsePercentOpt(const char* percentStr) {
     char buf[MAX_NAME_LEN];
@@ -149,11 +151,25 @@ int compareItems(const void* a, const void* b) {
     return 0;
 }
 
+void selectcur() {
+    printf("변환할 통화 단위를 선택하세요.\n1. USD\n2. EUR\n3. JPY\n4. CNY\n선택: ");
+    scanf("%d", &cnty);
+    switch (cnty) {
+    case 1: rate = get_usd_to_krw_rate(); strcpy(cur, "USD"); limit = 200; break;
+    case 2: rate = get_eur_to_krw_rate(); strcpy(cur, "EUR"); limit = 150; break;
+    case 3: rate = get_jpy_to_krw_rate(); strcpy(cur, "JPY"); limit = 150; break;
+    case 4: rate = get_cny_to_krw_rate(); strcpy(cur, "CNY"); limit = 150; break;
+    default:
+        printf("잘못된 선택입니다. USD로 설정합니다.\n");
+        rate = get_usd_to_krw_rate(); strcpy(cur, "USD"); limit = 200;
+        break;
+    }
+}
+
 void build_duty_free_boxes() {
     qsort(item_list, item_count, sizeof(Item), compareItems);
 
-    double usd_to_krw_rate = get_usd_to_krw_rate();
-    if (usd_to_krw_rate == 0) {
+    if (rate == 0) {
         fprintf(stderr, "오류: 환율 정보를 가져올 수 없습니다. 박스 구성에 실패했습니다.\n");
         return;
     }
@@ -164,11 +180,13 @@ void build_duty_free_boxes() {
         if (item_list[i].is_processed) continue;
 
         double item_total_krw = item_list[i].price * item_list[i].quantity;
-        double item_total_usd = item_total_krw / usd_to_krw_rate;
+        // 이 부분은 면세 한도를 비교할 때 현재 선택된 통화 단위를 사용합니다.
+        // 예를 들어 EUR를 선택했다면, KRW 총 가격을 EUR 환율로 나누어 EUR 면세 한도(150유로)와 비교합니다.
+        double item_total_foreign_currency = item_total_krw / rate;
 
         int placed_in_existing_box = 0;
         for (int b = 0; b < box_count; ++b) {
-            if ((boxes[b].total_price + item_total_krw) / usd_to_krw_rate <= DUTY_FREE_LIMIT && boxes[b].count < MAX_ITEMS) {
+            if (((boxes[b].total_price + item_total_krw) / rate) <= limit && boxes[b].count < MAX_ITEMS) {
                 boxes[b].items[boxes[b].count++] = &item_list[i];
                 boxes[b].total_price += item_total_krw;
                 item_list[i].is_processed = 1;
@@ -199,11 +217,6 @@ void build_duty_free_boxes() {
 }
 
 void build_duty_boxes() {
-    double usd_to_krw_rate = get_usd_to_krw_rate();
-    if (usd_to_krw_rate == 0) {
-        fprintf(stderr, "오류: 환율 정보를 가져올 수 없습니다. 박스 구성에 실패했습니다.\n");
-        return;
-    }
 
     for (int i = 0; i < item_count; ++i) {
         if (item_list[i].is_processed) continue;
@@ -226,37 +239,35 @@ void build_duty_boxes() {
 }
 
 void print_boxes() {
+    if (box_count == 0)
+    {
+        printf("등록된 박스가 없습니다. 상품을 먼저 등록해주세요.\n");
+        return;
+    }
+
     printf("\n===== 관부가세 최적화 결과 =====\n");
 
-	int cur = 0; double rate; 
-    printf("변환할 통화 단위를 선택하세요.\n1. USD\n2. EUR\n3. JPY\n4. CNY\n");
-    scanf("%d", &cur);
-	switch (cur) {
-    case 1: rate = get_usd_to_krw_rate(); strcpy(cnty, "USD"); break;
-    case 2: rate = get_eur_to_krw_rate(); strcpy(cnty, "EUR"); break;
-	case 3: rate = get_jpy_to_krw_rate(); strcpy(cnty, "JPY"); break;
-	case 4: rate = get_cny_to_krw_rate(); strcpy(cnty, "CNY"); break;
-	default:
-		printf("잘못된 선택입니다. USD로 설정합니다.\n");
-		rate = get_usd_to_krw_rate();
-		break;
-	}
-
     for (int i = 0; i < box_count; ++i) {
-        printf("\n📦 박스 %d:\n", i + 1);
+        printf("\n박스 %d:\n", i + 1);
         printf("  포함된 품목:\n");
         for (int j = 0; j < boxes[i].count; ++j) {
             Item* it = boxes[i].items[j];
             printf("    - %s (수량: %d): 개당 %.0f원 (총 %.0f원)\n", it->name, it->quantity, it->price, it->price * it->quantity);
         }
         printf("  총 상품 가격: %.0f원\n", boxes[i].total_price);
-        if (rate != 0) {
-            printf("  총 상품 가격 (%s): %.2f\n", cnty, boxes[i].total_price /rate);
-        }
 
-        double box_total_usd = boxes[i].total_price / rate;
+        // 박스 총 가격 (선택된 통화 단위)
+        double total_price_selected_currency = boxes[i].total_price / rate;
+        printf("  총 상품 가격 (%s): %.2f %s\n", cur, total_price_selected_currency, cur); // 통화 코드 추가
 
-        if (box_total_usd > DUTY_FREE_LIMIT) {
+        // 박스 총 가격 (USD), 면세 한도 비교용
+        double total_price_in_usd = boxes[i].total_price / get_usd_to_krw_rate();
+
+        printf("  면세 한도 (%s): %d %s\n", cur, limit, cur); // 통화 코드 추가
+
+        // 면세 여부 판단은 build_duty_free_boxes에서 사용한 로직과 동일하게
+        // 박스 총 가격 (선택된 통화 단위)과 선택된 통화의 면세 한도 (limit)를 비교합니다.
+        if (total_price_selected_currency > limit) { // 박스 총 가격 (선택된 통화)과 면세 한도 (선택된 통화)를 비교
             double actual_box_tax = 0.0;
             for (int j = 0; j < boxes[i].count; ++j) {
                 Item* it = boxes[i].items[j];

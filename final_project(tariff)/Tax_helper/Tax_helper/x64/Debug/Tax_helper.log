@@ -1,9 +1,2 @@
-﻿  main.c
-C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\main.c(2,9): warning C4005: 'CURL_STATICLIB': 매크로 재정의
-      C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\main.c(2,9):
-      이전에 명령줄에서 선언된 'CURL_STATICLIB'
-  
-  tax_optimizer.c
-C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\tax_optimizer.c(246,16): warning C4566: 유니버설 문자 이름 '\U0001F4E6'(으)로 표현되는 문자는 현재 코드 페이지(949)에서 표현할 수 없습니다.
-  코드를 생성하고 있습니다...
+﻿  tax_optimizer.c
   Tax_helper.vcxproj -> C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\x64\Debug\Tax_helper.exe

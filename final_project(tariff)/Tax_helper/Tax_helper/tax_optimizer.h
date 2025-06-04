@@ -4,7 +4,6 @@
 
 #define MAX_ITEMS 100
 #define MAX_BOXES 20
-#define DUTY_FREE_LIMIT 150.0
 #define MAX_NAME_LEN 128
 
 typedef struct {
@@ -31,6 +30,7 @@ extern int box_count;
 
 // 최적화 알고리즘 함수
 void loadTaxItemsOpt(const char* csvPath);
+void selectcur();
 void build_duty_free_boxes();
 void build_duty_boxes();
 void print_boxes();
