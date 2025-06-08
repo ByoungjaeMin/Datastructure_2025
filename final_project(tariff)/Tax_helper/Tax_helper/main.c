@@ -67,7 +67,7 @@ int main() {
             break;
         }
         case '2':
-            show_country_duty_free_info();
+            show_country_rate_and_duty_free_info();
             break;
 
         case '3':
@@ -76,12 +76,6 @@ int main() {
 
         case '4': {
             printf("[4] 관부가세/배송비 최적화 계산기\n");
-
-            double usd_rate = get_usd_to_krw_rate();
-            double eur_rate = get_eur_to_krw_rate();
-            double jpy_rate = get_jpy_to_krw_rate();
-            double cny_rate = get_cny_to_krw_rate();
-            printf("현재 환율\nUSD 1 = %.2f KRW\nEUR 1 = %.2f KRW\nJPY 1 = %.2f\nCNY 1 = %.2f\n", usd_rate, eur_rate, jpy_rate, cny_rate);
 
             char optChoice_char;
             do {

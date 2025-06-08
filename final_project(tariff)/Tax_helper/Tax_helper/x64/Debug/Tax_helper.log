@@ -1,2 +1,7 @@
-﻿  tax_optimizer.c
+﻿  main.c
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\main.c(2,9): warning C4005: 'CURL_STATICLIB': 매크로 재정의
+      C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\main.c(2,9):
+      이전에 명령줄에서 선언된 'CURL_STATICLIB'
+  
+C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\Tax_helper\main.c(70,13): warning C4013: 'show_country_rate_and_duty_free_info'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
   Tax_helper.vcxproj -> C:\Users\chomg\OneDrive\바탕 화면\Tax_helper\x64\Debug\Tax_helper.exe
