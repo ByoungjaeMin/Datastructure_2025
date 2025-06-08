@@ -6,7 +6,7 @@
 #include "exchange_api.h" // 변경된 헤더 파일 포함
 
 #define API_URL  "https://unipass.customs.go.kr:38010/ext/rest/trifFxrtInfoQry/retrieveTrifFxrtInfo"
-#define API_KEY  "API"
+#define API_KEY  "API" //UNIPASS 관세환율정보조회 API 키 발급 필요
 
 // get_rate 함수를 범용적으로 사용하여 특정 국가의 환율을 가져오도록 수정
 double get_rate(const char* country_sign) {

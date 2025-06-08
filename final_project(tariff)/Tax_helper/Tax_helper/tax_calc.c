@@ -19,6 +19,8 @@ static int categoryCount = 0;
 static int catItemIndex[MAX_CATEGORY][MAX_CHILD_PER_CAT];
 static int catItemCount[MAX_CATEGORY];
 
+int infoOnlyMode = 0;
+
 static double parsePercent(const char* percentStr) {
     char buf[MAX_NAME_LEN];
     int i, j = 0;
@@ -218,25 +220,40 @@ void handleTaxCalculation(void) {
     int quantity = 0;
     double unitPriceThousand = 0.0;
 
-    printf("수량을 입력하세요: ");
-    if (scanf("%d", &quantity) != 1) {
-        printf("잘못된 수량입니다.\n");
+    if (!infoOnlyMode) {
+        printf("수량을 입력하세요: ");
+        if (scanf("%d", &quantity) != 1) {
+            printf("잘못된 수량입니다.\n");
+            while (getchar() != '\n');
+            return;
+        }
+
+        printf("단가를 입력하세요 (천원 단위, 예: 1500 → 1,500,000원): ");
+        if (scanf("%lf", &unitPriceThousand) != 1) {
+            printf("잘못된 단가입니다.\n");
+            while (getchar() != '\n');
+            return;
+        }
         while (getchar() != '\n');
-        return;
     }
 
-    printf("단가를 입력하세요 (천원 단위, 예: 1500 → 1,500,000원): ");
-    if (scanf("%lf", &unitPriceThousand) != 1) {
-        printf("잘못된 단가입니다.\n");
-        while (getchar() != '\n');
-        return;
-    }
-    while (getchar() != '\n');
 
     int idx = findTaxIndexByName(product);
     if (idx < 0) {
         printf("해당 품목을 찾을 수 없습니다. 정확한 이름을 확인하세요.\n");
         return;
+    }
+
+    if (infoOnlyMode) {
+        printf("선택된 품목: %s\n", product);
+        TaxItem* ti = &taxList[idx];
+        printf("\n=== [세율 정보] ===\n");
+        printf("카테고리: %s\n", ti->taxType);
+        printf("품목명   : %s\n", ti->itemName);
+        printf("관세율   : %.1f%%\n", ti->tariffRate);
+        printf("부가세율 : %.1f%%\n", ti->vatRate);
+        printf("특소세율 : %.1f%%\n\n", ti->specialRate);
+        return;    // 여기서 끝냄! 뒤의 수량/단가 입력 X
     }
 
     double unitPrice = unitPriceThousand * 1000.0;

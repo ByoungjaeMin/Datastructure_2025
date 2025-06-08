@@ -13,6 +13,8 @@
 #include "tree_from_csv.h"
 #include "tax_calc.h"
 
+extern int infoOnlyMode;
+
 void show_menu() {
     printf("\n===== 해외직구 관부가세 계산기 CLI =====\n");
     printf("1. 카테고리별 관세/부가세율 보기\n");
@@ -47,25 +49,11 @@ int main() {
         while (getchar() != '\n');
 
         switch (choice) {
-        case '1': {
-            char item_name[128];
-            print_tree(tariff_tree_root, 0);
-            printf("조회할 품목명을 입력하세요 (예: 의류/수영복/속옷): ");
-            if (fgets(item_name, sizeof(item_name), stdin) == NULL) {
-                printf("입력 오류\n");
-                break;
-            }
-            item_name[strcspn(item_name, "\r\n")] = '\0';
-
-            TreeNode* found = search_tree(tariff_tree_root, item_name);
-            if (found) {
-                printf("품목 '%s'의 세금 정보: %s\n", found->name, found->data);
-            }
-            else {
-                printf("해당 품목을 찾을 수 없습니다.\n");
-            }
+        case '1':
+            infoOnlyMode = 1;            // "세율 안내 전용" 모드 ON
+            handleTaxCalculation();      // 3번 메뉴 함수 그대로 호출
+            infoOnlyMode = 0;            // OFF (원상복구)
             break;
-        }
         case '2':
             show_country_rate_and_duty_free_info();
             break;

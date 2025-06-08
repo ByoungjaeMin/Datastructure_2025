@@ -146,25 +146,48 @@ int compareItems(const void* a, const void* b) {
     double total_price_A = itemA->price * itemA->quantity;
     double total_price_B = itemB->price * itemB->quantity;
 
-    if (total_price_A < total_price_B) return -1;
-    if (total_price_A > total_price_B) return 1;
+    if (total_price_A > total_price_B) return -1;
+    if (total_price_A < total_price_B) return 1;
     return 0;
 }
 
 void selectcur() {
     printf("변환할 통화 단위를 선택하세요.\n1. USD\n2. EUR\n3. JPY\n4. CNY\n선택: ");
     scanf("%d", &cnty);
+
+    const double USD_DUTY_FREE_LIMIT = 150.0;  // USD 기준 면세 한도
+    double usd_rate = get_usd_to_krw_rate();
+
     switch (cnty) {
-    case 1: rate = get_usd_to_krw_rate(); strcpy(cur, "USD"); limit = 200; break;
-    case 2: rate = get_eur_to_krw_rate(); strcpy(cur, "EUR"); limit = 150; break;
-    case 3: rate = get_jpy_to_krw_rate(); strcpy(cur, "JPY"); limit = 150; break;
-    case 4: rate = get_cny_to_krw_rate(); strcpy(cur, "CNY"); limit = 150; break;
+    case 1: // USD
+        rate = usd_rate;
+        strcpy(cur, "USD");
+        limit = 200;
+        break;
+    case 2: // EUR
+        rate = get_eur_to_krw_rate();
+        strcpy(cur, "EUR");
+        limit = USD_DUTY_FREE_LIMIT * (usd_rate / rate);
+        break;
+    case 3: // JPY
+        rate = get_jpy_to_krw_rate();
+        strcpy(cur, "JPY");
+        limit = USD_DUTY_FREE_LIMIT * (usd_rate / rate);
+        break;
+    case 4: // CNY
+        rate = get_cny_to_krw_rate();
+        strcpy(cur, "CNY");
+        limit = USD_DUTY_FREE_LIMIT * (usd_rate / rate);
+        break;
     default:
         printf("잘못된 선택입니다. USD로 설정합니다.\n");
-        rate = get_usd_to_krw_rate(); strcpy(cur, "USD"); limit = 200;
+        rate = usd_rate;
+        strcpy(cur, "USD");
+        limit = USD_DUTY_FREE_LIMIT;
         break;
     }
 }
+
 
 void build_duty_free_boxes() {
     qsort(item_list, item_count, sizeof(Item), compareItems);
@@ -217,26 +240,39 @@ void build_duty_free_boxes() {
 }
 
 void build_duty_boxes() {
+    // 1) 가격 내림차순 정렬 (큰 것부터 넣는게 박스 수 줄이기 유리)
+    qsort(item_list, item_count, sizeof(Item), compareItems);
 
     for (int i = 0; i < item_count; ++i) {
         if (item_list[i].is_processed) continue;
 
         if (box_count >= MAX_BOXES) {
-            fprintf(stderr, "경고: 최대 박스 개수를 초과했습니다. 더 이상 과세 박스를 생성할 수 없습니다.\n");
+            fprintf(stderr, "경고: 최대 박스 개수를 초과했습니다.\n");
             break;
         }
 
+        // 2) 새 박스 시작
         boxes[box_count].total_price = 0.0;
         boxes[box_count].total_tax = 0.0;
         boxes[box_count].count = 0;
 
-        boxes[box_count].items[boxes[box_count].count++] = &item_list[i];
-        boxes[box_count].total_price += item_list[i].price * item_list[i].quantity;
-        item_list[i].is_processed = 1;
+        // 3) 현재 박스에 최대한 아이템 넣기
+        for (int j = i; j < item_count; ++j) {
+            if (item_list[j].is_processed) continue;
 
+            // 넣을 수 있는 조건 (MAX_ITEMS 제한만 체크)
+            if (boxes[box_count].count < MAX_ITEMS) {
+                boxes[box_count].items[boxes[box_count].count++] = &item_list[j];
+                boxes[box_count].total_price += item_list[j].price * item_list[j].quantity;
+                item_list[j].is_processed = 1;
+            }
+        }
+
+        // 4) 박스 완료 → 다음 박스로 넘어감
         box_count++;
     }
 }
+
 
 void print_boxes() {
     if (box_count == 0)
