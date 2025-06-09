@@ -228,7 +228,7 @@ void handleTaxCalculation(void) {
             return;
         }
 
-        printf("단가를 입력하세요 (천원 단위, 예: 1500 → 1,500,000원): ");
+        printf("단가를 입력하세요 (예: 1,500,000): ");
         if (scanf("%lf", &unitPriceThousand) != 1) {
             printf("잘못된 단가입니다.\n");
             while (getchar() != '\n');
